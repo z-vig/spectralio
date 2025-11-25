@@ -5,7 +5,7 @@ description = "Python-Optimized file formats for spectral data"
 authors = [
     {name = "Z.M. Vig",email = "zvig@umd.edu"}
 ]
-license = "LICENSE.md"
+license = "LICENSE"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
