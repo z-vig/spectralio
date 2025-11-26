@@ -1,5 +1,6 @@
 # Standard Libraries
 import logging
+from typing import Optional
 
 # Dependencies
 from pydantic import BaseModel, Field, model_validator
@@ -51,6 +52,17 @@ class WvlModel(BaseModel):
         self.nbands = int(len(self.values))
         self.ngoodbands = int(np.count_nonzero(np.asarray(self.bbl)))
         return self
+
+    @classmethod
+    def fromarray(
+        cls,
+        values: np.ndarray,
+        unit: WvlUnit,
+        bbl: Optional[list[bool]] = None,
+    ) -> "WvlModel":
+        if bbl is None:
+            bbl = [True] * values.size
+        return cls(values=list(values), unit=unit, bbl=bbl)
 
     def __array__(self):
         return np.asarray(self.values)

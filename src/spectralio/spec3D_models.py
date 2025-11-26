@@ -30,7 +30,9 @@ class Spectrum3D(BaseModel):
         return self
 
     def load_raster(
-        self, pixel_window: Optional[tuple[int, int, int, int]] = None
+        self,
+        pixel_window: Optional[tuple[int, int, int, int]] = None,
+        bbl: bool = True,
     ) -> np.ndarray:
         """
         Load raster data from absolute file path stored in the file.
@@ -57,6 +59,8 @@ class Spectrum3D(BaseModel):
 
         arr = np.transpose(arr, (1, 2, 0))
         arr[arr == -999]
+        if bbl:
+            arr = arr[:, :, self.wavelength.bbl]
         return arr
 
 
