@@ -21,6 +21,9 @@ class PointModel(BaseModel):
     x: float
     y: float
 
+    def astuple(self):
+        return (self.x, self.y)
+
 
 @dataclass
 class Bounds:

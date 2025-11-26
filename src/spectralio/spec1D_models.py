@@ -5,6 +5,7 @@ from typing import Literal
 # Dependencies
 from pydantic import BaseModel, Field
 import numpy as np
+from shapely.geometry import Point
 
 # Relative Imports
 from .geospatial_models import PointGeolocation, PointModel
@@ -112,3 +113,6 @@ class GeoSpectrum1D(Spectrum1D):
     def pixel_location(self) -> tuple[float, float]:
         """Returns a tuple containing the pixel point (x, y)"""
         return (self.point.pixel_point.x, self.point.pixel_point.y)
+
+    def shapely_geometry(self) -> Point:
+        return Point(self.point.map_point.astuple())

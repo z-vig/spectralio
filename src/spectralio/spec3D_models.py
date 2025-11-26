@@ -58,7 +58,6 @@ class Spectrum3D(BaseModel):
                 arr = f.read()
 
         arr = np.transpose(arr, (1, 2, 0))
-        arr[arr == -999]
         if bbl:
             arr = arr[:, :, self.wavelength.bbl]
         return arr

@@ -29,6 +29,7 @@ from .writing import (
     write_wvl,
     write_geodata,
 )
+from .shapefiles import make_points, make_polygons
 
 from .wvl_models import WvlModel
 from .spec1D_models import Spectrum1D, PointSpectrum1D, GeoSpectrum1D
@@ -53,4 +54,6 @@ __all__ = [
     "SpectrumGroup",
     "Spectrum3D",
     "GeoSpectrum3D",
+    "make_points",
+    "make_polygons",
 ]

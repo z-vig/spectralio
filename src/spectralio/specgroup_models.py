@@ -8,6 +8,7 @@ from alphashape import alphashape  # type: ignore
 # Relative Imports
 from .custom_types import PathLike, Path
 from .spec1D_models import PointSpectrum1D, Spec1DFileTypes
+from .geospatial_models import BaseGeolocationModel
 from .wvl_models import WvlModel
 
 # from .geospatial_models import Bounds
@@ -95,3 +96,9 @@ class SpectrumGroup(BaseModel):
             vert_arr[n, :] = i
 
         return vert_arr
+
+    def shapely_geometry(self, geodata: BaseGeolocationModel) -> Polygon:
+        new_verts: list[tuple[float, float]] = []
+        for vert in self.polygon_vertices:
+            new_verts.append(geodata.geotransform.pixel_to_map(*vert))
+        return Polygon(new_verts)

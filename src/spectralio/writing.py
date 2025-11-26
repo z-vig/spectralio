@@ -205,7 +205,7 @@ def write_group(
                 f"the number of bands ({wvlmodel.nbands}). It is"
                 f"currently {spec_group.shape}."
             )
-        for n in range(spec_group.shape[1]):
+        for n in range(spec_group.shape[0]):
             spec_data.append(list(spec_group[n, :]))
     else:
         spec_data = spec_group
