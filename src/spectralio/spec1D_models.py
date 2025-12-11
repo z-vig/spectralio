@@ -8,7 +8,11 @@ import numpy as np
 from shapely.geometry import Point
 
 # Relative Imports
-from .geospatial_models import PointGeolocation, PointModel
+from .geospatial_models import (
+    BaseGeolocationModel,
+    PointGeolocation,
+    PointModel,
+)
 from .wvl_models import WvlModel
 
 type Spec1DFileLiteral = Literal["rawspec"] | Literal["pntspec"] | Literal[
@@ -45,6 +49,12 @@ class Spectrum1D(BaseModel):
     wavelength: WvlModel
     bbl_applied: bool = Field(default=False)
 
+    @classmethod
+    def empty(cls) -> "Spectrum1D":
+        return cls(
+            name="null", spectrum=[], wavelength=WvlModel.default_bbl([], "um")
+        )
+
     def applybbl(self):
         self.spectrum = list(np.asarray(self.spectrum)[self.wavelength.bbl])
         self.bbl_applied = True
@@ -74,6 +84,17 @@ class PointSpectrum1D(Spectrum1D):
 
     pixel: PointModel
 
+    @classmethod
+    def from_pixel_coord(
+        cls, x: float, y: float, spec1d: Spectrum1D
+    ) -> "PointSpectrum1D":
+        return cls(
+            name=spec1d.name,
+            spectrum=spec1d.spectrum,
+            wavelength=spec1d.wavelength,
+            pixel=PointModel(x=x, y=y),
+        )
+
 
 class GeoSpectrum1D(Spectrum1D):
     """
@@ -98,6 +119,40 @@ class GeoSpectrum1D(Spectrum1D):
     """
 
     point: PointGeolocation
+
+    @classmethod
+    def from_pixel_coord(
+        cls,
+        x: float,
+        y: float,
+        geoloc: BaseGeolocationModel,
+        spec1d: Spectrum1D,
+    ):
+        return cls(
+            name=spec1d.name,
+            spectrum=spec1d.spectrum,
+            wavelength=spec1d.wavelength,
+            point=PointGeolocation.from_base(
+                geoloc=geoloc, location=(x, y), location_type="pixel"
+            ),
+        )
+
+    @classmethod
+    def from_map_coord(
+        cls,
+        x: float,
+        y: float,
+        geoloc: BaseGeolocationModel,
+        spec1d: Spectrum1D,
+    ):
+        return cls(
+            name=spec1d.name,
+            spectrum=spec1d.spectrum,
+            wavelength=spec1d.wavelength,
+            point=PointGeolocation.from_base(
+                geoloc=geoloc, location=(x, y), location_type="map"
+            ),
+        )
 
     def location_str(self) -> str:
         """Returns a formatted string of location data."""

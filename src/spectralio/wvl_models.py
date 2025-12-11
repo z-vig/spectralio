@@ -54,6 +54,10 @@ class WvlModel(BaseModel):
         return self
 
     @classmethod
+    def default_bbl(cls, values: list[float], unit: WvlUnit) -> "WvlModel":
+        return cls(values=values, unit=unit, bbl=[True] * len(values))
+
+    @classmethod
     def fromarray(
         cls,
         values: np.ndarray,
