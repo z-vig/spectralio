@@ -36,12 +36,23 @@ class SpectrumGroup(BaseModel):
 
     @model_validator(mode="after")
     def set_nspectra(self) -> "SpectrumGroup":
+        if self.name == "null":
+            return self
         self.nspectra = len(self.spectra)
         poly: Polygon = alphashape(self.spectra_pts, alpha=0.9)  # type: ignore
         self.polygon_vertices = [
             (i, j) for i, j in zip(poly.exterior.xy[0], poly.exterior.xy[1])
         ]
         return self
+
+    @classmethod
+    def empty(cls) -> "SpectrumGroup":
+        return cls(
+            name="null",
+            spectra=[],
+            spectra_pts=[],
+            wavelength=WvlModel.default_bbl([0], "um"),
+        )
 
     def applybbl(self):
         for i in self.spectra:

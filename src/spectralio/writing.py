@@ -16,7 +16,7 @@ from .spec1D_models import (
     Spec1DFileTypes,
 )
 from .specgroup_models import SpectrumGroup
-from .spec3D_models import Spectrum3D, GeoSpectrum3D
+from .spec3D_models import Spectrum3D, GeoSpectrum3D, Spec3DFileTypes
 from .geospatial_models import (
     PointModel,
     PointGeolocation,
@@ -267,7 +267,7 @@ def write_spec3D(
             ncols=width,
             raster_fp=raster_fp,
         )
-        file_suffix = ".spcub"
+        file_suffix = Spec3DFileTypes.RAW
     else:
         with open(geodata_fp, "r") as f:
             geojson_str = f.read()
@@ -280,7 +280,7 @@ def write_spec3D(
             raster_fp=raster_fp,
             geodata=geodat,
         )
-        file_suffix = ".geospcub"
+        file_suffix = Spec3DFileTypes.GEO
 
     if Path(fp).is_dir():
         save_path = Path(fp, name).with_suffix(file_suffix)
@@ -319,3 +319,29 @@ def write_wvl(
     with open(out_path, "w") as f:
         f.write(json_string)
     logger.info("Wrote wavelength file: %s", out_path)
+
+
+def write_from_object(spectrum_like_obj, save_fp: PathLike) -> None:
+    json_str = spectrum_like_obj.model_dump_json(indent=2)
+    suffix: str = ""
+    if (
+        isinstance(spectrum_like_obj, Spectrum1D)
+        and not isinstance(spectrum_like_obj, PointSpectrum1D)
+        and not isinstance(spectrum_like_obj, GeoSpectrum1D)
+    ):
+        suffix = Spec1DFileTypes.RAW
+    elif isinstance(spectrum_like_obj, PointSpectrum1D):
+        suffix = Spec1DFileTypes.PNT
+    elif isinstance(spectrum_like_obj, GeoSpectrum1D):
+        suffix = Spec1DFileTypes.GEO
+    elif isinstance(spectrum_like_obj, Spectrum3D):
+        suffix = Spec3DFileTypes.RAW
+    elif isinstance(spectrum_like_obj, GeoSpectrum3D):
+        suffix = Spec3DFileTypes.GEO
+    elif isinstance(spectrum_like_obj, SpectrumGroup):
+        suffix = ".specgrp"
+    else:
+        raise ValueError("Invalid Spectrum Like Object")
+
+    with open(Path(save_fp).with_suffix(suffix), "w") as f:
+        f.write(json_str)

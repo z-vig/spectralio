@@ -1,4 +1,5 @@
 # Standard Libraries
+from enum import StrEnum
 from typing import Literal, Optional
 
 # Dependencies
@@ -14,6 +15,11 @@ from .wvl_models import WvlModel
 
 
 type Spec3DFileLiteral = Literal["spcub"] | Literal["geospcub"]
+
+
+class Spec3DFileTypes(StrEnum):
+    RAW = ".spcub"
+    GEO = ".geospcub"
 
 
 class Spectrum3D(BaseModel):

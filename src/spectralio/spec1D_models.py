@@ -52,7 +52,9 @@ class Spectrum1D(BaseModel):
     @classmethod
     def empty(cls) -> "Spectrum1D":
         return cls(
-            name="null", spectrum=[], wavelength=WvlModel.default_bbl([], "um")
+            name="null",
+            spectrum=[],
+            wavelength=WvlModel.default_bbl([0], "um"),
         )
 
     def applybbl(self):
@@ -144,13 +146,28 @@ class GeoSpectrum1D(Spectrum1D):
         y: float,
         geoloc: BaseGeolocationModel,
         spec1d: Spectrum1D,
-    ):
+    ) -> "GeoSpectrum1D":
         return cls(
             name=spec1d.name,
             spectrum=spec1d.spectrum,
             wavelength=spec1d.wavelength,
             point=PointGeolocation.from_base(
                 geoloc=geoloc, location=(x, y), location_type="map"
+            ),
+        )
+
+    @classmethod
+    def from_point_spec(
+        cls, geoloc: BaseGeolocationModel, spec1d: PointSpectrum1D
+    ) -> "GeoSpectrum1D":
+        return cls(
+            name=spec1d.name,
+            spectrum=spec1d.spectrum,
+            wavelength=spec1d.wavelength,
+            point=PointGeolocation.from_base(
+                geoloc=geoloc,
+                location=(spec1d.pixel.x, spec1d.pixel.y),
+                location_type="map",
             ),
         )
 
