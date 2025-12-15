@@ -167,7 +167,7 @@ class GeoSpectrum1D(Spectrum1D):
             point=PointGeolocation.from_base(
                 geoloc=geoloc,
                 location=(spec1d.pixel.x, spec1d.pixel.y),
-                location_type="map",
+                location_type="pixel",
             ),
         )
 

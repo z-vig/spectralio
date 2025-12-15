@@ -54,6 +54,17 @@ class SpectrumGroup(BaseModel):
             wavelength=WvlModel.default_bbl([0], "um"),
         )
 
+    def resolve_polygon(self) -> None:
+        if self.name == "null":
+            raise UserWarning(
+                "SpectrumGroup was not resolved because its name was not set."
+            )
+        self.nspectra = len(self.spectra)
+        poly: Polygon = alphashape(self.spectra_pts, alpha=0.9)  # type: ignore
+        self.polygon_vertices = [
+            (i, j) for i, j in zip(poly.exterior.xy[0], poly.exterior.xy[1])
+        ]
+
     def applybbl(self):
         for i in self.spectra:
             i.applybbl()
