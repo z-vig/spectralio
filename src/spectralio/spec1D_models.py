@@ -61,6 +61,9 @@ class Spectrum1D(BaseModel):
         self.spectrum = list(np.asarray(self.spectrum)[self.wavelength.bbl])
         self.bbl_applied = True
 
+    def tonumpy(self):
+        return np.asarray(self.spectrum, dtype=np.float32)
+
 
 class PointSpectrum1D(Spectrum1D):
     """
