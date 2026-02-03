@@ -1,6 +1,6 @@
 [project]
 name = "spectralio"
-version = "0.1.7"
+version = "0.1.9"
 description = "Python-Optimized file formats for spectral data"
 authors = [
     {name = "Z.M. Vig",email = "zvig@umd.edu"}

@@ -60,6 +60,16 @@ class GeotransformModel(BaseModel):
     col_rotation: float
 
     @classmethod
+    def null(cls):
+        return cls(
+            upperleft=PointModel(x=0, y=0),
+            xres=1,
+            row_rotation=0,
+            yres=-1,
+            col_rotation=0,
+        )
+
+    @classmethod
     def fromgdal(
         cls, gdal_transform: tuple[float, float, float, float, float, float]
     ) -> "GeotransformModel":
@@ -148,6 +158,17 @@ class BaseGeolocationModel(BaseModel):
 
     crs: str
     geotransform: GeotransformModel
+
+    @classmethod
+    def null(cls):
+        return cls(
+            crs=(
+                'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",'
+                'SPHEROID["WGS_1984",6378137.0,298.257223563]],'
+                'PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]]'
+            ),
+            geotransform=GeotransformModel.null(),
+        )
 
 
 class PointGeolocation(BaseGeolocationModel):
