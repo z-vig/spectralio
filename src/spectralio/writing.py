@@ -321,7 +321,16 @@ def write_wvl(
     logger.info("Wrote wavelength file: %s", out_path)
 
 
-def write_from_object(spectrum_like_obj, save_fp: PathLike) -> None:
+def write_from_object(
+    spectrum_like_obj: (
+        Spectrum1D
+        | PointSpectrum1D
+        | GeoSpectrum1D
+        | SpectrumGroup
+        | Spectrum3D
+    ),
+    save_fp: PathLike,
+) -> None:
     json_str = spectrum_like_obj.model_dump_json(indent=2)
     suffix: str = ""
     if (

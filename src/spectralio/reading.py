@@ -112,7 +112,7 @@ def read_wvl(wvl_fp: PathLike) -> WvlModel:
     -------
     WvlModel object.
     """
-    file_suff = Path(wvl_fp).suffix
+    file_suff = Path(wvl_fp).suffix.lower()
     if file_suff != ".wvl":
         raise FileTypeError(f"The file type should be .wvl not {file_suff}.")
     with open(wvl_fp, "r") as f:

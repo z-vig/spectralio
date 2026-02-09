@@ -90,8 +90,8 @@ class GeotransformModel(BaseModel):
             self.xres,
             self.row_rotation,
             self.upperleft.y,
-            self.yres,
             self.col_rotation,
+            self.yres,
         )
 
     def get_bbox(self, height: int, width: int):
